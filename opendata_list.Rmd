@@ -1,0 +1,87 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+# オープンデータ提供元の一覧
+
+## 行政
+
+### 都道府県
+
+確認日: `2015-07-30`
+
+ダウンロードできるファイルへのリンクがあるページを「オープンデータに関するページとした」
+
+```{r}
+library(rvest)
+url <- "http://www.wam.go.jp/content/wamnet/pcpub/top/link/top_link04.html"
+pref <- vector()
+link <- vector()
+
+html(url) %>% {
+  pref <<- html_table(.) %>% rlist::list.ungroup(.) %$% `リンク先名称`
+  link <<- html_nodes(., xpath = "//div/div/div/div/div/table/tr/td/li/p/a") %>% html_attr("href")
+}
+
+df <- cbind(pref, link) %>% tail(., n = 47) %>% as.data.frame(row.names = 1:47)
+
+opendata <- c("http://www.pref.hokkaido.lg.jp/ss/jsk/opendata.htm", 
+              NA, 
+              NA, 
+              NA, 
+              NA, 
+              "http://www.pref.yamagata.jp/ou/kikakushinko/020051/opendata.html",
+              "http://www.pref.fukushima.lg.jp/sec/11045a/open-data-top.html",
+              "http://www.pref.ibaraki.jp/kikaku/joho/it/opendata/od-00.html",
+              "http://tochigiken.jp",
+              NA,
+              "http://www.pref.saitama.lg.jp/a0105/saitamaken-opendatacatalog-2014/",
+              "http://www.pref.chiba.lg.jp/seisaku/toukeidata/opendata/index.html",
+              "http://www.metro.tokyo.jp/SUB/OPENDATA/",
+              NA,
+              "http://search.pref.niigata.lg.jp/go?rt=1438227613471&docId=73be07ab64594614972d97d2312e473d",
+              NA,
+              NA,
+              "http://www.pref.fukui.lg.jp/doc/toukei-jouhou/opendata/",
+              NA,
+              NA,
+              "http://www.pref.gifu.lg.jp/kensei-unei/johoka/denshi-jichitai/opendata/",
+              "http://open-data.pref.shizuoka.jp",
+              "http://www.pref.aichi.jp/0000069289.html",
+              "http://www.pref.mie.lg.jp/IT/HP/opendata/",
+              NA,
+              NA,
+              "http://www.pref.osaka.lg.jp/kikaku_keikaku/opendata/index.html",
+              "http://open-data.pref.hyogo.lg.jp",
+              NA,
+              "https://github.com/wakayama-pref-org/data_link_list",
+              "http://db.pref.tottori.jp/opendataResearch.nsf",
+              NA,
+              NA,
+              NA,
+              NA,
+              "http://ouropendata.jp",
+              "http://www.pref.kagawa.lg.jp/content/etc/subsite/opendata/",
+              NA,
+              NA,
+              "http://www.pref.fukuoka.lg.jp/dataweb/",
+              NA,
+              NA,
+              NA,
+              NA,
+              NA,
+              NA,
+              NA)
+
+df %<>% cbind(., opendata)
+```
+
+```{r}
+df %>% knitr::kable(row.names = 1:nrow(df))
+```
+
+### 市区町村
+
+* [相模原市オープンデータライブラリー | 相模原市](http://www.city.sagamihara.kanagawa.jp/opendata/index.html)
